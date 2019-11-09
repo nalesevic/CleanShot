@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,6 +29,7 @@ public class SendActivity extends AppCompatActivity implements LocationListener 
     LocationManager locationManager;
     TextView locationText;
     private Spinner junkSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +40,12 @@ public class SendActivity extends AppCompatActivity implements LocationListener 
         imgView = (ImageView) findViewById(R.id.imgView);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            Bitmap image = (Bitmap) extras.get("image");
-            if (image != null) {
+            if (extras.get("image") != null) {
+                Bitmap image = (Bitmap) extras.get("image");
                 imgView.setImageBitmap(image);
+            } else if (extras.get("path").toString() != null) {
+                String path = extras.get("path").toString();
+                imgView.setImageBitmap(BitmapFactory.decodeFile(path));
             }
         }
 
