@@ -29,6 +29,11 @@ public class SendActivity extends AppCompatActivity implements LocationListener 
     LocationManager locationManager;
     TextView locationText;
     private Spinner junkSpinner;
+    private static Double lt;
+    private static Double lg;
+    private Bitmap image;
+    private static String path;
+    private static String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +46,18 @@ public class SendActivity extends AppCompatActivity implements LocationListener 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.get("image") != null) {
-                Bitmap image = (Bitmap) extras.get("image");
+                image = (Bitmap) extras.get("image");
                 imgView.setImageBitmap(image);
-            } else if (extras.get("path").toString() != null) {
-                String path = extras.get("path").toString();
+            } else if (extras.get("path") != null) {
+                path = extras.get("path").toString();
                 imgView.setImageBitmap(BitmapFactory.decodeFile(path));
+            } else if (extras.get("location") != null) {
+                location = extras.get("location").toString();
             }
-        }
 
+        }
+        if(location != null)
+            locationText.setText(location);
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, this);
@@ -68,17 +77,51 @@ public class SendActivity extends AppCompatActivity implements LocationListener 
         junkSpinner.setAdapter(junkType);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(image != null)
+            imgView.setImageBitmap(image);
+        if(path != null)
+            imgView.setImageBitmap(BitmapFactory.decodeFile(path));
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.get("location") != null)
+                locationText.setText(extras.get("location").toString());
+        }
+    }
+
+    public void onSetLocation(View view) {
+        Intent intent = new Intent(this, LocationActivity.class);
+
+        if(lt != null && lg != null) {
+            intent.putExtra("latitude", lt);
+            intent.putExtra("longitude", lg);
+            intent.putExtra("image", image);
+            intent.putExtra("path", path);
+        }
+        startActivity(intent);
+
+
+
+    }
+
     public void onSend(View view) {
         Intent intent = new Intent(this, MainActivity.class);
+        path = null;
+        image = null;
         startActivity(intent);
-        finish();
+        this.finish();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        String comAd = getCompleteAddressString(location.getLatitude(), location.getLongitude());
-
-        locationText.setText("" + comAd);
+        if(image != null) {
+            lt = location.getLatitude();
+            lg = location.getLongitude();
+            String comAd = getCompleteAddressString(lt, lg);
+            locationText.setText(comAd);
+        }
     }
 
     @Override

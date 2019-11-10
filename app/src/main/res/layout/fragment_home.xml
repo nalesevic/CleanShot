@@ -12,7 +12,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="150dp"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
         android:onClick="onTakePicture"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
@@ -24,7 +26,9 @@
         android:layout_marginTop="150dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
         android:onClick="onSelectFromGallery"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
